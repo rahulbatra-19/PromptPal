@@ -17,6 +17,9 @@ const PromptCardList = ({ data, handleTagClick }) => {
 };
 
 const Feed = () => {
+  const hadleTagClickfunc = (tag) => {
+    setSearchText(tag);
+  };
   const [searchText, setSearchText] = useState("");
   const [posts, setPosts] = useState([]);
   const handleSearchChange = (e) => {};
@@ -40,7 +43,7 @@ const Feed = () => {
           className="search_input peer"
         />
       </form>
-      <PromptCardList data={posts} handleTagClick={() => {}} />
+      <PromptCardList data={posts} handleTagClick={hadleTagClickfunc} />
     </section>
   );
 };
