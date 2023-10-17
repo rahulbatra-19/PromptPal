@@ -23,6 +23,7 @@ const Feed = () => {
   const handleSearch = () => {};
   const [searchText, setSearchText] = useState("");
   const [posts, setPosts] = useState([]);
+  const [searchedPosts, setSearchedPosts] = useState([]);
   const handleSearchChange = (e) => {
     setSearchText(e.target.value);
   };
@@ -35,17 +36,20 @@ const Feed = () => {
         regex.test(item.prompt)
     );
   };
+  const fetchPostBasedOnSearch = () => {
+    setSearchedPosts(filterPrompts(searchText));
+  };
   useEffect(() => {
     const fetchPosts = async () => {
       const response = await fetch("/api/prompt");
       const data = await response.json();
       setPosts(data);
     };
-    const fetchPostBasedOnSearch = () => {
-      setPosts(filterPrompts(searchText));
-    };
-    if (searchText === "") fetchPosts();
-    else fetchPostBasedOnSearch();
+
+    fetchPosts();
+  }, []);
+  useEffect(() => {
+    fetchPostBasedOnSearch();
   }, [searchText]);
   return (
     <section className="feed">
@@ -60,7 +64,14 @@ const Feed = () => {
           onSubmit={handleSearch}
         />
       </form>
-      <PromptCardList data={posts} handleTagClick={handleTagClickfunc} />
+      {searchText !== "" ? (
+        <PromptCardList
+          data={searchedPosts}
+          handleTagClick={handleTagClickfunc}
+        />
+      ) : (
+        <PromptCardList data={posts} handleTagClick={handleTagClickfunc} />
+      )}
     </section>
   );
 };
